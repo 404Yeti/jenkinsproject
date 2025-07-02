@@ -1,34 +1,34 @@
 pipeline {
     agent {
         node {
-            label 'docker-agent-alpine'
+            label 'docker-agent-go'
         }
-    }
-    triggers {
-        pollSCM('H/10 * * * *') // Polls SCM every 10 minutes
     }
     stages {
         stage('Build') {
             steps {
-                echo "Building.."
+                echo "Building..."
                 sh '''
-                    echo "doing build stuff.."
+                    cd myapp
+                    go mod tidy
+                    go build -o hello gohello.go
                 '''
             }
         }
         stage('Test') {
             steps {
-                echo "Testing.."
+                echo "Testing..."
                 sh '''
-                    echo "doing test stuff.."
+                    cd myapp
+                    ./hello
                 '''
             }
         }
         stage('Deliver') {
             steps {
-                echo "Delivering.."
+                echo "Delivering..."
                 sh '''
-                    echo "doing delivery stuff.."
+                    echo "Delivery successful!"
                 '''
             }
         }
